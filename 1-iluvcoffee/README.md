@@ -177,3 +177,18 @@ In the previous request, the parameter we can simply pass its name in parenthesi
     return `This action returns a #${id} cat`;
   }
 ```
+
+## Async/await
+We love modern JavaScript and we know that data extraction is mostly asynchronous. That's why Nest supports and works well with async functions.
+
+Every async function has to return a Promise. It means that you can return a deferred value that Nest will be able to resolve by itself. Let's see an example of this below:
+
+```ts
+ @Get('async')
+  async findAllAsync(): Promise<string[]> {
+    return await Promise.resolve(['Persian', 'Siamese', 'Maine Coon']);
+  }
+```
+
+> JavaScript is single Threaded and non-blocking, we need to clear some concept before we go forward in order to understand async/await properly.
+
