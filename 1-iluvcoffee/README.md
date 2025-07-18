@@ -114,7 +114,7 @@ Pattern based routes are supported as well. For instance, the asterisk is used a
   findAllWildCard(): string {
     return 'This action returns all wildcard cats';
   }
-````
+```
 
 This creates a wildcard route that matches URLs with a specific pattern. The * acts as a wildcard character.
 What @Get('ab*cd') matches:
@@ -125,4 +125,15 @@ What @Get('ab*cd') matches:
 - /cats/abANYTHINGcd ✅
 - /cats/ab_hello_world_cd ✅
 
+## Status Code
+As mentioned, the response `status code` is always 200 by default, except for POST request which are 201. We can easily change this behavior by adding the @HttpCode(...) decorator at a handler-level.
 
+```ts
+@Post()
+@HttpCode(204)
+create() {
+  return 'This action adds a new cat';
+}
+```
+
+## 
