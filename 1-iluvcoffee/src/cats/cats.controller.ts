@@ -1,9 +1,10 @@
-import { Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Controller, Get, Header, HttpCode, Post } from '@nestjs/common';
 
 @Controller('cats')
 export class CatsController {
   @Post()
   @HttpCode(201)
+  @Header('Cache-Control', 'No idea about the cache')
   create(): string {
     return 'This action adds a new cat';
   }

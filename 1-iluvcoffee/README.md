@@ -136,4 +136,18 @@ create() {
 }
 ```
 
-## 
+## Headers
+To specify a custom response header, you can either use a @Header() decorator or a library-specific response object.
+
+```ts
+import {Header, Post} from '@nestjs/common';
+
+@Controller('cats')
+export class CatsController {
+  @Post()
+  @Header('Cache-Control', 'No idea about the cache')
+  create(): string {
+    return 'This action adds a new cat';
+  }
+}
+```
