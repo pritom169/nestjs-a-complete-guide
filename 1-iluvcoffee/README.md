@@ -54,3 +54,32 @@ Furthermore, the response's status code is always 200 by default, except for POS
 **Library-specific Approach:** We can use the library specific response object, which we can inject using the @Res() decorator in the function signature (e.g. findAll(@Res() response)).
 
 > It is forbiddn to use both approaches at the same time. Nest detects whether the handler is using either @Res() or @Next(). If both approaches are used in the same time - the Standard approach is automatically disabled for this single route and will no longer work as expected.
+
+## Request object
+A lot of endpoints need access to the client request details. In fact, Nest is using a library-specific (express by default) request object. As a result, we can force Nest to inject the request object into the handler using the @Req() decorator.
+
+```ts
+import { Controller, Get, Req } from '@nestjs/common';
+
+@Controller('cats')
+export class CatsController {
+  @Get()
+  findAll(@Req() request: Request): string {
+    console.log(request);
+    return 'This action returns all cats';
+  }
+}
+```
+
+The request object represents the HTTP request and has properties for the request query string, parameters, HTTP headers, and body. In most cases, it's not necessary to grab these properties manually. We can use dedicated decorators instead, such as @Body() or @Query(), which are available out of the box. Below is a comparison of the provided decorators and the plain express objects they represent.
+
+| Decorator            | Equivalent Expression              |
+|----------------------|------------------------------------|
+| `@Request()`         | `req`                              |
+| `@Response()`        | `res`                              |
+| `@Next()`            | `next`                             |
+| `@Session()`         | `req.session`                      |
+| `@Param(param?)`     | `req.params` / `req.params[param]` |
+| `@Body(param?)`      | `req.body` / `req.body[param]`     |
+| `@Query(param?)`     | `req.query` / `req.query[param]`   |
+| `@Headers(param?)`   | `req.headers` / `req.headers[param]` |
