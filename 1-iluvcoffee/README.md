@@ -106,3 +106,23 @@ export class CatsController {
 
 Nest provides the rest of those endpoint decorators in the same fashion - @Put(), @Delete(), @Patch(), @Options(), @Head(), and @All(). All of them represent respective HTTP request methods.
 
+## Route Wildcards
+Pattern based routes are supported as well. For instance, the asterisk is used as a wildcard, and will match any combination of character(s).
+
+```ts
+@Get('ab*cd')
+  findAllWildCard(): string {
+    return 'This action returns all wildcard cats';
+  }
+````
+
+This creates a wildcard route that matches URLs with a specific pattern. The * acts as a wildcard character.
+What @Get('ab*cd') matches:
+
+- /cats/abcd ✅
+- /cats/abXcd ✅
+- /cats/ab123cd ✅
+- /cats/abANYTHINGcd ✅
+- /cats/ab_hello_world_cd ✅
+
+

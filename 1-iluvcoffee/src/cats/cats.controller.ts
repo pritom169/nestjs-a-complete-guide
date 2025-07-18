@@ -11,4 +11,9 @@ export class CatsController {
   findAll(): string {
     return 'This action returns all cats';
   }
+
+  @Get('ab*cd')
+  findAllWildCard(): string {
+    return 'This action returns all wildcard cats';
+  }
 }
