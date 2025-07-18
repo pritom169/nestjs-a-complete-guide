@@ -151,3 +151,29 @@ export class CatsController {
   }
 }
 ```
+
+## Route parameters
+Routes with static paths can't help when you need to accept dynamic data as part of the URL. In order to define routes with parameters, we can directly particularise the route parameters in the path of the route.
+
+```ts
+import { Param } from '@nestjs/common';
+
+@Controller('cats')
+export class CatsController {
+  @Get(':id')
+  findOne(@Param() params: { id: string }): string {
+    console.log(params);
+    return `This action returns a #${params.id} cat`;
+  }
+}
+```
+
+### Particular Parameters in a route
+In the previous request, the parameter we can simply pass its name in parenthesis.
+
+```ts
+@Get(':id')
+  findOne(@Param('id') id: string): string {
+    return `This action returns a #${id} cat`;
+  }
+```
