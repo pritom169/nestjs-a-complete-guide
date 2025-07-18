@@ -83,3 +83,26 @@ The request object represents the HTTP request and has properties for the reques
 | `@Body(param?)`      | `req.body` / `req.body[param]`     |
 | `@Query(param?)`     | `req.query` / `req.query[param]`   |
 | `@Headers(param?)`   | `req.headers` / `req.headers[param]` |
+
+## Resources
+We defined an endpoint to fetch the cats resource (GET route). It will also be great to provide a way of creating new records as well. For this, let's create POST handler:
+
+```ts
+import { Controller, Get, Post } from '@nestjs/common';
+
+@Controller('cats')
+export class CatsController {
+  @Post()
+  create(): string {
+    return 'This action adds a new cat';
+  }
+
+  @Get()
+  findAll(): string {
+    return 'This action returns all cats';
+  }
+}
+```
+
+Nest provides the rest of those endpoint decorators in the same fashion - @Put(), @Delete(), @Patch(), @Options(), @Head(), and @All(). All of them represent respective HTTP request methods.
+
