@@ -139,5 +139,66 @@ This is the heart of how JavaScript handles concurrency. Let me explain exactly 
 **The Event Loop Magic**
 - JavaScript uses something called the Event Loop to juggle multiple operations even though it's single-threaded.
 
-However, JS runtime is 
+However, JS runtime is a combination of 
+1. Call Stack (Combination of Heap and Call Stack, but for simpliicty let's call it callstack)
+2. Web APIs
+3. Event Loop
+4. Task Queue
+5. Microtask Queue
+
+All this elements allows us to perform asynchronous task in a non-blocking way.
+
+Since JS is single threaded, we are working with a single call stack. How call stack serializes lines of codes let's visualize with a code:
+
+```ts
+console.log("One");
+console.log("Two");
+
+function logThree() {
+    console.log("Three");
+}
+
+function logThreeAndFour(){
+    logThree();
+    console.log("Four");
+}
+
+logThreeAndFour();
+```
+
+Here it is how this program get's handles by JS call stack:
+```
+Start
+ ↓
+console.log("One") → prints "One"
+Stack: [main]
+ ↓
+console.log("Two") → prints "Two"
+Stack: [main]
+ ↓
+logThreeAndFour() called
+Stack: [main, logThreeAndFour]
+ ↓
+ logThree() called
+ Stack: [main, logThreeAndFour, logThree]
+   ↓
+   console.log("Three") → prints "Three"
+   Stack: [main, logThreeAndFour, logThree]
+   ↓
+   logThree() returns
+   Stack: [main, logThreeAndFour]
+ ↓
+ console.log("Four") → prints "Four"
+ Stack: [main, logThreeAndFour]
+ ↓
+ logThreeAndFour() returns
+ Stack: [main]
+↓
+End
+Stack: []
+
+Output: One, Two, Three, Four
+```
+
+
 
