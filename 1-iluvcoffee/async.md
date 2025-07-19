@@ -200,5 +200,89 @@ Stack: []
 Output: One, Two, Three, Four
 ```
 
+Now let's consider this code.
+
+```js
+function longRunningTask() {
+    let count = 0;
+    for (let j = 0; j < 'a big number'; j ++){
+        count++;
+    }
+    console.log("Long task done!");
+}
+
+function importantTask(){
+    console.log("Important!");
+}
+
+longRunningTask();
+importantTask();
+```
+
+The function `longRunningTask()` takes a long time to execute, in between that no other tasks gets executed because of the single threaded nature of JS. However, it can't stay in such way as the in real life there will me many heavy tasks such as reading from databases, network requests, timers or file selector.
+
+So in real life does the call stack gets blocked if we use all the long running tasks? **No**. In real life, we use WebAPIs. `WebAPIs are interfaces that allows us to interact with the browser features.` Here are some functionalities WebAPIs has.
+
+```
+// DOM Manipulation
+document.getElementById()
+document.querySelector()
+document.createElement()
+element.addEventListener()
+
+// HTTP Requests
+fetch()
+XMLHttpRequest()
+
+// Storage
+localStorage.setItem()
+sessionStorage.getItem()
+indexedDB.open()
+
+// Geolocation
+navigator.geolocation.getCurrentPosition()
+
+// Media
+navigator.mediaDevices.getUserMedia()
+HTMLVideoElement.play()
+Audio()
+
+// Timing
+setTimeout()
+setInterval()
+requestAnimationFrame()
+
+// Navigation
+window.location
+history.pushState()
+navigator.userAgent
+
+// Notifications
+Notification()
+navigator.serviceWorker
+
+// File Handling
+FileReader()
+File()
+Blob()
+
+// WebRTC
+RTCPeerConnection()
+RTCDataChannel()
+
+// Canvas/Graphics
+CanvasRenderingContext2D
+WebGL
+
+// Performance
+performance.now()
+IntersectionObserver()
+
+// Clipboard
+navigator.clipboard.writeText()
+````
+
+
+
 
 
