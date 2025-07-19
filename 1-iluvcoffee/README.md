@@ -239,3 +239,38 @@ import { CatsController } from './cats/cats.controller';
 })
 export class AppModule {}
 ```
+
+## Libray-specific approach
+So far we've discussed the Nest standard way of manipulating responses. The second way of manipulating the response is to use a library-specific response object. In order to inject a particular response object, we need to use the @Res() decorator. To show the differences, let's rewrite the CatsController to the following:
+
+```ts
+import {
+  Controller,
+  Get,
+  Post,
+  Res,
+  HttpStatus,
+  Bind,
+  Body,
+} from '@nestjs/common';
+import { Response } from 'express';
+import { CreateCatDto } from './dto/create-cat.dto';
+
+@Controller('cats')
+export class CatsController {
+  @Post()
+  @Bind(Res(), Body())
+  create(res: Response, createCatDto: CreateCatDto): void {
+    console.log('Cat created:', createCatDto);
+    res.status(HttpStatus.CREATED).send('Cat created successfully');
+  }
+
+  @Get()
+  @Bind(Res())
+  findAll(res: Response): void {
+    res.status(HttpStatus.OK).json('[]');
+  }
+}
+```
+
+Though this approach works, it's much less clear in general. The first approach should always be preferred, but to make Nest backwards compatible with previous versions, the above approach is still available. One other thing to note is the response object in this approach allows for more flexibility - by allowing us to have full control of the response object (headers manipulation and so on).
