@@ -354,4 +354,4 @@ console.log("End of script")
 - Finally the server returns some data, hence `PromiseState` is fullfilled, `PromiseResult` is Response object we got back from server, and promise reaction handler has been pushed to `Microtask Queue`.
 - The `Microtask Queue` then look if the call stack is empty. If it's empty it pushes the request to call stack and the result of the request gets printed into the console.
 
-> Something to keep in mind with the microtask can schedule another microtask. That means the event loop is constantly managing the microtask and the task queue never gets access to the event loop. 
+> Something to keep in mind with the microtask can schedule another microtask. That means the event loop is constantly managing the microtask and the task queue never gets access to the event loop.

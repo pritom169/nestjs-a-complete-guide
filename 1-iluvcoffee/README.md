@@ -190,5 +190,33 @@ Every async function has to return a Promise. It means that you can return a def
   }
 ```
 
-> JavaScript is single Threaded and non-blocking, we need to clear some concept before we go forward in order to understand async/await properly.
+> JavaScript is single Threaded and non-blocking, we need to clear some concept before we go forward in order to understand async/await properly. Hop into [this text](async.md) link to learn more about async / await.
 
+## Request Payloads
+Previous example of the POST route handler didn't accept any client params. Let's fix this by adding the @Body() argument here.
+
+But first (if you use TypeScript), we need to determine the DTO (Data Transfer Object) schema. A DTO is an object that defines how the data will be sent over the network. We could determine the DTO schema by using TypeScript interfaces, or by simple classes. Surprisingly, we recommend using classes here. Why? Classes are part of the JavaScript ES6 standard, and therefore they represent plain functions. On the other hand, since TypeScript interfaces are removed during the transpilation, Nest can't refer to them. This is important because features such as Pipes enable additional possibilities when they have access to the metatype of the variable.
+
+Let's create CreateDto inside the cats module:
+```ts
+// create-cat.dto.ts
+export class CreateCatDto {
+  readonly name?: string;
+  readonly age?: number;
+  readonly breed?: string;
+}
+```
+
+- You might be asking why readonly?
+- DTOs are meant to transfer data, not to be modified after creation. readonly prevents accidental mutations
+
+- Why do we need the optional properties?
+- Without optional TS expects that whenever you create an instance of this class, you must provide values for all three properties. If you try to create an instance without providing all required properties, TypeScript will show an error because it can't guarantee type safety. As a result, we add optionals which tells TS about the absense of any data.
+
+Thereafter we can use the newly created schema inside the CatsController:
+```ts
+@Post()
+async create(@Body() createCatDto: CreateCatDto) {
+  return 'This action adds a new cat';
+}
+```
