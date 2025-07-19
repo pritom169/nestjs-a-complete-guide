@@ -220,3 +220,22 @@ async create(@Body() createCatDto: CreateCatDto) {
   return 'This action adds a new cat';
 }
 ```
+
+## Getting up and running
+With the above controller fully prepared, Nest still does not know that `CatsController` exists and as a result won't create an instance of this class.
+
+Controllers always belong to the the module, which is why hold the `controllers` array within the `@Module()` decorator. Since we don't have any other modules except the root `ApplicationModule`, we will use that to introduce the `CatsController`
+
+```ts
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { CatsController } from './cats/cats.controller';
+
+@Module({
+  imports: [],
+  controllers: [AppController, CatsController],
+  providers: [AppService],
+})
+export class AppModule {}
+```
