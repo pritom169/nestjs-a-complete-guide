@@ -334,10 +334,24 @@ console.log("End of Script")
 ## Mictotask Queue
 When we talk about promises, we have to talk about microtask queue. Only the following callbacks gets pushed into the microtask queues.
 1. `.then(() => {...})`, `.catch(() => {...})`, and `.finally(() => {...})` call backs.
-2. `async function async() {
+2. ```async function async() {
     await
-}`
+}```
 3. `queueMicrotask(() => {...});`
 4. `new MutationObserver(() => {...});`
 
 However, the event loop priotizes the microtask queue. When the call stack is empty, the event loop first empties the mictotask queue. Only then it will push the tasks from task queue.
+
+Let's take one of the popular api fetching.
+```ts
+fetch("https://dog.ceo/api/...").then(res => console.log(res))
+
+console.log("End of script")
+```
+
+- When we call `fetch`, it creates a Promise Object. It's `PromiseState` is "pending", `PromiseResult` is "undefined" and `PromieFullfillReaction` is empty. The browser then initiates a network call. This creates a `promise reaction record` with `res => console.log(res)`
+- In the meantime service has to responded yet, so go to line `console.log("End of script")`. The console log then gets into the call stack and "End of script" gets printed into the console.
+- Finally the server returns some data, hence `PromiseState` is fullfilled, `PromiseResult` is Response object we got back from server, and promise reaction handler has been pushed to `Microtask Queue`.
+- The `Microtask Queue` then look if the call stack is empty. If it's empty it pushes the request to call stack and the result of the request gets printed into the console.
+
+> Something to keep in mind with the microtask can schedule another microtask. That means the event loop is constantly managing the microtask and the task queue never gets access to the event loop. 
