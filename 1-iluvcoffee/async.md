@@ -280,9 +280,64 @@ IntersectionObserver()
 
 // Clipboard
 navigator.clipboard.writeText()
-````
+```
 
+Now you might be asking what WebAPIs has to do with it. Some of the WebAPIs can offload the heavy or long running tasks to the browser. When we invoke such APIs, we are initiating the offloading. Most of those APIs mentioned are
+1. Call-backs based
+2. Promise based
 
+1. **Call-backes based:** Let's consider the first example
 
+```js
+navigator.geolocation.getCurrentPosition(
+    position => console.log(position)
+    error => console.error(error)
+)
+```
 
+- First the `getCurrentPosition()` gets initiated into the call stack. However, this process is only for registering the callbacks (position => console.log(position), error => console.error(error)) and initiating the async task. When those async tasks gets initiated the `getCurrentPosition()` function gets released from call stack. 
 
+- In the background, the task does some process and shows the users a pop up. Now we have no idea when the users will react to the pop-up, however it does not matter as the `getCurrentPosition()` function is not present in the call-stack. It nice as the entire website is responsibe as the callstack is not blocked.
+
+- Finally the user allows for location, and uses the success call back to handle the result. However, it can not just push the call back to the call stack as it would disrupt the current processes inside the call stack.
+
+- But instead the callback gets pushed to the task-queue. It is also known as callback queue for this exact reason. Task queue holds call backs and web api handlers to handle at a later point in future.
+
+- Now we can talk about **Event Loop**. It's event loops responsibility to check if the call stack is empty. When the call stack is empty, it pushes the first task into the call stack and the call stack executes it.
+
+- Finally we handle the execution and user's location is logged to the console.
+
+Now let's take another example where there are timeouts involved.
+
+```js
+setTimeout(() => {
+    console.log("2000ms")
+});
+
+setTimeout(() => {
+    console.log("100ms)
+},100);
+
+console.log("End of Script")
+```
+
+- First setTimeout with 2000ms gets added to call stack just to register the call back with the timer API. Once timer API gets initiated, it gets removed from the call stack.
+
+- Same thing happens with 100ms setTimeout method.
+
+- Then it comes to `console.log("End of Script")`, it gets executed immediately as there is nothing asynchronous here.
+
+- Once the 100ms time is over, the `setTimeout()` method gets executed and moves to Task Queue. Couple of things to keep in mind.
+    - So the timer is not for how much time it needs to be pushed to call stack. It is rather for task queue.
+- Now the task queue checks whether the call-stack is empty or not. If empty, it pushes the task to call stack. If not, it waits in the task queue.
+
+## Mictotask Queue
+When we talk about promises, we have to talk about microtask queue. Only the following callbacks gets pushed into the microtask queues.
+1. `.then(() => {...})`, `.catch(() => {...})`, and `.finally(() => {...})` call backs.
+2. `async function async() {
+    await
+}`
+3. `queueMicrotask(() => {...});`
+4. `new MutationObserver(() => {...});`
+
+However, the event loop priotizes the microtask queue. When the call stack is empty, the event loop first empties the mictotask queue. Only then it will push the tasks from task queue.
