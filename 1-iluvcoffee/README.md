@@ -1,3 +1,4 @@
+# Overview
 ## Installing NestJS cli tool and creating project
 
 First we have to make sure node is installed on our local machine. Once node is installed we have to install `npm install -g @nestjs/cli`.
@@ -274,3 +275,10 @@ export class CatsController {
 ```
 
 Though this approach works, it's much less clear in general. The first approach should always be preferred, but to make Nest backwards compatible with previous versions, the above approach is still available. One other thing to note is the response object in this approach allows for more flexibility - by allowing us to have full control of the response object (headers manipulation and so on).
+
+## Providers
+Providers in Nest.js are classes that can be injected as dependencies into other classes. Think of them as reusable pieces of functionality that your application needs. The most common type of provider is a service - a class that handles business logic, database operations, or other tasks.
+
+In the previous chapter, we created a simple CatsController. Controllers should handle HTTP requests and delegate more complex tasks to providers. Providers are plain JavaScript classes declared as providers in a NestJS module.
+
+### Services
