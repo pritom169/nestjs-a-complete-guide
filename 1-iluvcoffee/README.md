@@ -304,3 +304,52 @@ export class CatsService {
 
 The @Injectable() decorator tells NestJS that this class can be "injected" as a dependency into other classes. The "IoC container" (Inversion of Control container) is NestJS's system for managing dependencies. Instead of you manually creating instances of classes everywhere you need them, the IoC container handles this automatically.
 
+If you need the interface, here it is
+
+```ts
+
+export interface Cat {
+  name: string;
+  age: number;
+  breed: string;
+}
+```
+
+Now since we have a service class to retrieve cats, let's use it inside the `CatsController`:
+
+```ts
+import {
+  Controller,
+  Get,
+  Post,
+  Res,
+  HttpStatus,
+  Bind,
+  Body,
+} from '@nestjs/common';
+import { Response } from 'express';
+import { CreateCatDto } from './dto/create-cat.dto';
+import { CatsService } from './cats.service';
+
+@Controller('cats')
+export class CatsController {
+  constructor(private catsService: CatsService) {}
+
+  @Post()
+  @Bind(Res(), Body())
+  create(res: Response, createCatDto: CreateCatDto): void {
+    console.log('Cat created:', createCatDto);
+    res.status(HttpStatus.CREATED).send('Cat created successfully');
+  }
+
+  @Get()
+  @Bind(Res())
+  findAll(res: Response): void {
+    res.status(HttpStatus.OK).json('[]');
+  }
+}
+```
+
+The CatsService is injected through the class constructor. Notice the use of the private keyword. This shorthand allows us to both declare and initialize the catsService member in the same line, streamlining the process.
+
+
