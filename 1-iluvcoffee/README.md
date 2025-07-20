@@ -282,3 +282,25 @@ Providers in Nest.js are classes that can be injected as dependencies into other
 In the previous chapter, we created a simple CatsController. Controllers should handle HTTP requests and delegate more complex tasks to providers. Providers are plain JavaScript classes declared as providers in a NestJS module.
 
 ### Services
+Let's begin by creating a simple CatsService. This service will handle data storage and retrieval, and it will be used by the CatsController. Because of its role in managing the application's logic, it’s an ideal candidate to be defined as a provider.
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { Cat } from './interfaces/cats.interface';
+
+@Injectable()
+export class CatsService {
+  private readonly cats: Cat[] = [];
+
+  create(cat: Cat): void {
+    this.cats.push(cat);
+  }
+
+  findAll(): Cat[] {
+    return this.cats;
+  }
+}
+```
+
+The @Injectable() decorator tells NestJS that this class can be "injected" as a dependency into other classes. The "IoC container" (Inversion of Control container) is NestJS's system for managing dependencies. Instead of you manually creating instances of classes everywhere you need them, the IoC container handles this automatically.
+
