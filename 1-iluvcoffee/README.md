@@ -350,9 +350,6 @@ export class CatsController {
 }
 ```
 
-The CatsService is injected through the class constructor. Notice the use of the private keyword. This shorthand allows us to both declare and initialize the catsService member in the same line, streamlining the process.
-
-### Scopes
-Providers typically have a lifetime ("scope") that aligns with the application lifecycle. When the application is bootstrapped, each dependency must be resolved, meaning every provider gets instantiated. Similarly, when the application shuts down, all providers are destroyed. However, it’s also possible to make a provider request-scoped, meaning its lifetime is tied to a specific request rather than the application's lifecycle. You can learn more about these techniques in the Injection Scopes chapter.
+The CatsService is injected through the class constructor. Notice the use of the private keyword. This shorthand allows us to both declare and initialize the catsService member in the same line, streamlining the processes.
 
 

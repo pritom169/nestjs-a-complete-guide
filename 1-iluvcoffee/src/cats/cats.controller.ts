@@ -2,9 +2,10 @@ import {
   Controller,
   Get,
   Post,
-  Res,
-  HttpStatus,
-  Bind,
+  Delete,
+  Param,
+  Patch,
+  Query,
   Body,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -13,18 +14,30 @@ import { CatsService } from './cats.service';
 
 @Controller('cats')
 export class CatsController {
-  constructor(private catsService: CatsService) {}
-
-  @Post()
-  @Bind(Res(), Body())
-  create(res: Response, createCatDto: CreateCatDto): void {
-    console.log('Cat created:', createCatDto);
-    res.status(HttpStatus.CREATED).send('Cat created successfully');
-  }
+  constructor(private readonly catsService: CatsService) {}
 
   @Get()
-  @Bind(Res())
-  findAll(res: Response): void {
-    res.status(HttpStatus.OK).json('[]');
+  findAll(@Query() paginationQuery: any) {
+    return this.catsService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.catsService.findOne(id);
+  }
+
+  @Post()
+  create(@Body() body: any) {
+    return this.catsService.create(body);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() body: any) {
+    return this.catsService.update(id, body);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.catsService.remove(id);
   }
 }
