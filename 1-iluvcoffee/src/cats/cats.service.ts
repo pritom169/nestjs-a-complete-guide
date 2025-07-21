@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Body, Injectable, NotFoundException } from '@nestjs/common';
 import { Cat } from './interfaces/cats.interface';
+import { CreateCatDto } from './dto/create-cat.dto';
 
 @Injectable()
 export class CatsService {
@@ -13,8 +14,8 @@ export class CatsService {
     },
   ];
 
-  create(cat: Cat): void {
-    this.cats.push(cat);
+  create(@Body() createCatDto: CreateCatDto): void {
+    this.cats.push(createCatDto);
   }
 
   findOne(id: string): Cat | undefined {
