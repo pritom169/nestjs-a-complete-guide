@@ -8,8 +8,6 @@ import {
   Query,
   Body,
 } from '@nestjs/common';
-import { Response } from 'express';
-import { CreateCatDto } from './dto/create-cat.dto';
 import { CatsService } from './cats.service';
 
 @Controller('cats')
