@@ -1,4 +1,4 @@
-import { Body, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Cat } from './interfaces/cats.interface';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
@@ -15,7 +15,7 @@ export class CatsService {
     },
   ];
 
-  create(@Body() createCatDto: CreateCatDto): void {
+  create(createCatDto: CreateCatDto): void {
     const newCat: Cat = {
       id: this.cats.length > 0 ? this.cats[this.cats.length - 1].id + 1 : 1,
       ...createCatDto,
@@ -38,7 +38,12 @@ export class CatsService {
   update(id: string, cat: UpdateCatDto): void {
     const existingCat = this.findOne(id);
     if (existingCat) {
-      // Update the existing cat with new values
+      const updatedCat: Cat = {
+        ...existingCat,
+        ...cat,
+      };
+      const catIndex = this.cats.findIndex((c) => c.id === +id);
+      this.cats[catIndex] = updatedCat;
     }
   }
 
