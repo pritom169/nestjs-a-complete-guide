@@ -1,5 +1,15 @@
+import { IsString, IsNumber } from 'class-validator';
+
 export class CreateCatDto {
-  readonly name?: string;
-  readonly age?: number;
-  readonly breed?: string;
+  @IsString()
+  readonly name: string;
+
+  @IsNumber()
+  readonly age: number;
+
+  @IsString()
+  readonly breed: string;
+
+  @IsString({ each: true })
+  readonly activities: string[];
 }
