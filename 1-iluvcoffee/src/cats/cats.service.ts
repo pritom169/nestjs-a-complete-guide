@@ -15,12 +15,13 @@ export class CatsService {
     },
   ];
 
-  create(createCatDto: CreateCatDto): void {
+  create(createCatDto: CreateCatDto): CreateCatDto {
     const newCat: Cat = {
       id: this.cats.length > 0 ? this.cats[this.cats.length - 1].id + 1 : 1,
       ...createCatDto,
     };
     this.cats.push(newCat);
+    return newCat;
   }
 
   findOne(id: string): Cat | undefined {
