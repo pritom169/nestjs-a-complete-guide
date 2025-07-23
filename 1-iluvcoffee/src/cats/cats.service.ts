@@ -2,50 +2,43 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Cat } from './interfaces/cats.interface';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CatsService {
-  private readonly cats: Cat[] = [
-    {
-      id: 1,
-      name: 'Bella',
-      breed: 'Siamese',
-      age: 2,
-      activities: ['playing', 'sleeping'],
-    },
-  ];
+  constructor(
+    @InjectRepository(Cat) private readonly catRepository: Repository<Cat>,
+  ) {}
 
-  create(createCatDto: CreateCatDto): CreateCatDto {
-    const newCat: Cat = {
-      id: this.cats.length > 0 ? this.cats[this.cats.length - 1].id + 1 : 1,
-      ...createCatDto,
-    };
-    this.cats.push(newCat);
-    return newCat;
+  create(createCatDto: CreateCatDto): Promise<Cat> {
+    const cat = this.catRepository.create(createCatDto);
+    return this.catRepository.save(cat);
   }
 
-  findOne(id: string): Cat | undefined {
-    const coffee = this.cats.find((cat) => cat.id === +id);
-    if (!coffee) {
-      throw new NotFoundException(`Cat with id: ${id} not found`);
+  async findOne(id: string): Promise<Cat> {
+    const cat = await this.catRepository.findOne({ where: { id: +id } });
+    if (!cat) {
+      throw new NotFoundException(`Cat with ID ${id} not found`);
     }
-    return coffee;
+    return cat;
   }
 
-  findAll(): Cat[] {
-    return this.cats;
+  findAll(): Promise<Cat[]> {
+    return this.catRepository.find();
   }
 
-  update(id: string, cat: UpdateCatDto): void {
-    const existingCat = this.findOne(id);
-    if (existingCat) {
-      const updatedCat: Cat = {
-        ...existingCat,
-        ...cat,
-      };
-      const catIndex = this.cats.findIndex((c) => c.id === +id);
-      this.cats[catIndex] = updatedCat;
+  async update(id: string, cat: UpdateCatDto): void {
+    const cat = await this.catRepository.preload({
+      id: +id,
+      ...cat
+    });
+
+    if (!cat) {
+      throw new NotFoundException(`Cat with ${id} not found`);
     }
+
+    return this.catRepository.save(cat);
   }
 
   remove(id: string): void {
