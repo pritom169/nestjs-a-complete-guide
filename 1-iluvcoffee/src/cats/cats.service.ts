@@ -28,10 +28,10 @@ export class CatsService {
     return this.catRepository.find();
   }
 
-  async update(id: string, cat: UpdateCatDto): void {
+  async update(id: string, updateCatDto: UpdateCatDto): Promise<Cat> {
     const cat = await this.catRepository.preload({
       id: +id,
-      ...cat
+      ...updateCatDto,
     });
 
     if (!cat) {
@@ -41,10 +41,8 @@ export class CatsService {
     return this.catRepository.save(cat);
   }
 
-  remove(id: string): void {
-    const catIndex = this.cats.findIndex((cat) => cat.id === +id);
-    if (catIndex >= 0) {
-      this.cats.splice(catIndex, 1);
-    }
+  async remove(id: string): Promise<Cat> {
+    const cat = await this.findOne(id);
+    return this.catRepository.remove(cat);
   }
 }
